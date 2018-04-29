@@ -97,10 +97,10 @@ function authentificationMiddleware(){
   if (req.isAuthenticated()) return next();
 
   res.redirect('/login'); 
-  }
+  } 
 }
 router.post('/login', passport.authenticate('local', {
-  successRedirect: '/profile',
-  failureRedirect: '/login'
+  failureRedirect: '/login',
+  successRedirect: '/profile'
 }));
 module.exports = router;

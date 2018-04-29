@@ -5,12 +5,12 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
-var bcrypt = require('bcrypt');
 var mysql = require('mysql');
 
 //Authentication packages
+var bcrypt = require('bcrypt');
 var passport = require('passport');
-var localStrategy = require('passport-local'), Strategy;
+var localStrategy = require('passport-local'),Strategy;
 var session = require('express-session');
 var MySQLStore = require ('express-mysql-session')(session);
 var indexRouter = require('./routes/index');
@@ -68,9 +68,14 @@ passport.use(new localStrategy(function(username, password, done){
       if (results.length === 0){
         done(null, false);
       }
-      done(null, 'ghfghh');
+      console.log(results[0]);
+      const hash = results[0];
+
+     /** bcrypt.compare(password, hash, function(err,response){
+
+      })*/
+      return done(null, 'ghfghh');
     })
-    return done(null, 'fdgd');
 }))
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
