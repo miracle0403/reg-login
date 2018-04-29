@@ -53,29 +53,42 @@ app.use(passport.session());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
+
+app.use(function(req, res, next){
+  res.locals.isAuthenticated = req.isAuthenticated();
+  next(); 
+})
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 passport.use(new localStrategy(function(username, password, done){
-    console.log(username)
-    console.log(password)
-
+    console.log(username);
+    console.log(password);
     const db = require('./db.js');
 
-    db.query('SELECT password FROM test WHERE username = ?', [username], function (err, results, fields){
+    db.query('SELECT user_id, password FROM test WHERE username = ?', [username], function (err, results, fields){
       if (err) {done(err)};
-
       if (results.length === 0){
         done(null, false);
       }
-      console.log(results[0]);
-      const hash = results[0];
+      else {
+        console.log(results[0]);
+        const hash = results[0].password.toString();
 
-     /** bcrypt.compare(password, hash, function(err,response){
+        bcrypt.compare(password, hash, function(err, response){
+          if (response === true){
+            return done(null, {user_id: results[0].user_id});
+          }
+          else{
+            return done(null, false);
+        }
+      });
+      
+      }
+      
+    });
 
-      })*/
-      return done(null, 'ghfghh');
-    })
+    
 }))
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

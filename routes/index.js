@@ -24,6 +24,13 @@ router.get('/login', function(req, res, next) {
   res.render('login', { title: 'LOG IN' });
 });
 
+//get logout
+router.get('/logout', function(req, res, next) {
+  req.logout();
+  req.session.destroy();
+  res.redirect('/');
+});
+
 //get profile
 router.get('/profile', authentificationMiddleware(), function(req, res, next) {
   res.render('profile', { title: 'USER PPROFILE' });
